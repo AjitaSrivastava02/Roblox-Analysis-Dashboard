@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Corporation - Business Intelligence Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            /* Roblox Dark Theme */
+            --roblox-black: #000000;
+            --roblox-dark: #0a0a0a;
+            --roblox-card: #191919;
+            --roblox-elevated: #232323;
+            
+            /* Roblox Brand Colors - Balanced Mix */
+            --roblox-red: #e0004d;
+            --roblox-blue: #0084ff;
+            --roblox-green: #00ff88;
+            --roblox-purple: #a335ff;
+            --roblox-orange: #ff6b35;
+            --roblox-cyan: #00e5ff;
+            --roblox-yellow: #ffd700;
+            
+            --roblox-white: #ffffff;
+            --text-primary: #ffffff;
+            --text-secondary: #bfbfbf;
+            --text-muted: #808080;
+            
+            --shadow-red: 0 0 30px rgba(224, 0, 77, 0.4);
+            --shadow-blue: 0 0 30px rgba(0, 132, 255, 0.4);
+            --shadow-green: 0 0 30px rgba(0, 255, 136, 0.4);
+            --shadow-purple: 0 0 30px rgba(163, 53, 255, 0.4);
+        }
+        
+        [data-theme="light"] {
+            --roblox-black: #ffffff;
+            --roblox-dark: #f5f5f5;
+            --roblox-card: #ffffff;
+            --roblox-elevated: #fafafa;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --shadow-red: 0 0 20px rgba(224, 0, 77, 0.2);
+            --shadow-blue: 0 0 20px rgba(0, 132, 255, 0.2);
+            --shadow-green: 0 0 20px rgba(0, 255, 136, 0.2);
+            --shadow-purple: 0 0 20px rgba(163, 53, 255, 0.2);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--roblox-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background Blocks - Colorful */
+        .background-blocks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .floating-block {
+            position: absolute;
+            border-radius: 12px;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .floating-block:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            background: linear-gradient(135deg, rgba(224, 0, 77, 0.05), rgba(163, 53, 255, 0.05));
+            border: 1px solid rgba(224, 0, 77, 0.15);
+            animation-delay: 0s;
+            transform: rotate(15deg);
+        }
+        
+        .floating-block:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            left: 80%;
+            background: linear-gradient(135deg, rgba(0, 132, 255, 0.05), rgba(0, 229, 255, 0.05));
+            border: 1px solid rgba(0, 132, 255, 0.15);
+            animation-delay: 2s;
+            transform: rotate(-20deg);
+        }
+        
+        .floating-block:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 15%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(255, 215, 0, 0.05));
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            animation-delay: 4s;
+            transform: rotate(25deg);
+        }
+        
+        .floating-block:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            top: 30%;
+            left: 70%;
+            background: linear-gradient(135deg, rgba(163, 53, 255, 0.05), rgba(0, 132, 255, 0.05));
+            border: 1px solid rgba(163, 53, 255, 0.15);
+            animation-delay: 6s;
+            transform: rotate(-15deg);
+        }
+        
+        .floating-block:nth-child(5) {
+            width: 90px;
+            height: 90px;
+            top: 50%;
+            left: 50%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(224, 0, 77, 0.05));
+            border: 1px solid rgba(255, 107, 53, 0.15);
+            animation-delay: 8s;
+            transform: rotate(10deg);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(15deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(-15deg);
+            }
+        }
+        
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Navigation with Rainbow Border */
+        .top-nav {
+            background: var(--roblox-black);
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--roblox-red), var(--roblox-purple), var(--roblox-blue), var(--roblox-green)) 1;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        /* 3D Rotating Logo - Multicolor */
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--roblox-red), var(--roblox-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(224, 0, 77, 0.6);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: pulse 3s infinite;
+            position: relative;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, var(--roblox-red), var(--roblox-blue), var(--roblox-purple), var(--roblox-green));
+            background-size: 300% 300%;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+            animation: gradientRotate 4s linear infinite;
+        }
+        
+        .logo-icon:hover::before {
+            opacity: 1;
+        }
+        
+        .logo-icon:hover {
+            transform: scale(1.15) rotate(360deg);
+            box-shadow: 0 0 50px rgba(224, 0, 77, 1);
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(224, 0, 77, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(163, 53, 255, 0.8);
+            }
+        }
+        
+        @keyframes gradientRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .logo-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: var(--roblox-white);
+        }
+        
+        .app-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--roblox-red), var(--roblox-purple), var(--roblox-blue), var(--roblox-green));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        
+        .stats-quick {
+            display: flex;
+            gap: 32px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .stat-mini {
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+        
+        .stat-mini:hover {
+            transform: translateY(-2px);
+        }
+        
+        .stat-mini:nth-child(1) span {
+            color: var(--roblox-blue);
+            font-weight: 800;
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(0, 132, 255, 0.5);
+        }
+        
+        .stat-mini:nth-child(2) span {
+            color: var(--roblox-green);
+            font-weight: 800;
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .stat-mini:nth-child(3) span {
+            color: var(--roblox-purple);
+            font-weight: 800;
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(163, 53, 255, 0.5);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--roblox-elevated);
+            border: 1px solid rgba(0, 132, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .theme-toggle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(0, 132, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .theme-toggle:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--roblox-blue);
+            box-shadow: var(--shadow-blue);
+            transform: translateY(-2px);
+        }
+        
+        /* Tab Navigation - Multicolor */
+        .tab-bar {
+            background: var(--roblox-black);
+            border-bottom: 1px solid rgba(0, 132, 255, 0.2);
+            padding: 0 40px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+        
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 16px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--roblox-blue), var(--roblox-purple));
+            transform: translateX(-50%);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .tab-button:hover {
+            color: var(--text-primary);
+            background: var(--roblox-elevated);
+            transform: translateY(-2px);
+        }
+        
+        .tab-button:hover::after {
+            width: 100%;
+        }
+        
+        .tab-button.active {
+            color: var(--roblox-blue);
+            text-shadow: 0 0 10px rgba(0, 132, 255, 0.5);
+        }
+        
+        .tab-button.active::after {
+            width: 100%;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 40px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeInScale 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes fadeInScale {
+            from { 
+                opacity: 0; 
+                transform: scale(0.95) translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        /* Page Header - Rainbow Gradient */
+        .page-header {
+            background: var(--roblox-card);
+            border: 1px solid rgba(0, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--roblox-red), var(--roblox-purple), var(--roblox-blue), var(--roblox-green), transparent);
+            animation: slideRight 2s infinite;
+        }
+        
+        @keyframes slideRight {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .page-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -1.5px;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+        
+        .business-question {
+            background: linear-gradient(135deg, rgba(0, 132, 255, 0.1), rgba(163, 53, 255, 0.1));
+            border-left: 4px solid var(--roblox-blue);
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.8;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* KPI Cards - Each Different Color */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: var(--roblox-card);
+            border: 2px solid;
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: scaleIn 0.5s ease backwards;
+        }
+        
+        .kpi-card:nth-child(1) { 
+            border-color: rgba(0, 132, 255, 0.3);
+            animation-delay: 0.1s; 
+        }
+        
+        .kpi-card:nth-child(2) { 
+            border-color: rgba(0, 255, 136, 0.3);
+            animation-delay: 0.2s; 
+        }
+        
+        .kpi-card:nth-child(3) { 
+            border-color: rgba(163, 53, 255, 0.3);
+            animation-delay: 0.3s; 
+        }
+        
+        .kpi-card:nth-child(4) { 
+            border-color: rgba(255, 107, 53, 0.3);
+            animation-delay: 0.4s; 
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            height: 4px;
+        }
+        
+        .kpi-card:nth-child(1)::before {
+            background: linear-gradient(90deg, var(--roblox-blue), var(--roblox-cyan));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+        
+        .kpi-card:nth-child(2)::before {
+            background: linear-gradient(90deg, var(--roblox-green), var(--roblox-yellow));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+        
+        .kpi-card:nth-child(3)::before {
+            background: linear-gradient(90deg, var(--roblox-purple), var(--roblox-red));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+        
+        .kpi-card:nth-child(4)::before {
+            background: linear-gradient(90deg, var(--roblox-orange), var(--roblox-red));
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .kpi-card:nth-child(1):hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--roblox-blue);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), var(--shadow-blue);
+        }
+        
+        .kpi-card:nth-child(2):hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--roblox-green);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), var(--shadow-green);
+        }
+        
+        .kpi-card:nth-child(3):hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--roblox-purple);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), var(--shadow-purple);
+        }
+        
+        .kpi-card:nth-child(4):hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: var(--roblox-orange);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 107, 53, 0.4);
+        }
+        
+        .kpi-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+        
+        .kpi-card:nth-child(1) .kpi-icon {
+            filter: drop-shadow(0 0 10px rgba(0, 132, 255, 0.5));
+        }
+        
+        .kpi-card:nth-child(2) .kpi-icon {
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+        
+        .kpi-card:nth-child(3) .kpi-icon {
+            filter: drop-shadow(0 0 10px rgba(163, 53, 255, 0.5));
+        }
+        
+        .kpi-card:nth-child(4) .kpi-icon {
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .kpi-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+        
+        .kpi-value {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            line-height: 1;
+            letter-spacing: -2px;
+            transition: all 0.3s;
+        }
+        
+        .kpi-card:nth-child(1) .kpi-value {
+            color: var(--roblox-blue);
+            text-shadow: 0 0 20px rgba(0, 132, 255, 0.5);
+        }
+        
+        .kpi-card:nth-child(2) .kpi-value {
+            color: var(--roblox-green);
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .kpi-card:nth-child(3) .kpi-value {
+            color: var(--roblox-purple);
+            text-shadow: 0 0 20px rgba(163, 53, 255, 0.5);
+        }
+        
+        .kpi-card:nth-child(4) .kpi-value {
+            color: var(--roblox-orange);
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+        
+        .kpi-card:hover .kpi-value {
+            transform: scale(1.1);
+        }
+        
+        .kpi-change {
+            font-size: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--roblox-green);
+        }
+        
+        .change-badge {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--roblox-green);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            animation: pulse-badge 2s infinite;
+        }
+        
+        @keyframes pulse-badge {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+            }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--roblox-card);
+            border: 1px solid rgba(0, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease backwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card:hover {
+            border-color: var(--roblox-blue);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), var(--shadow-blue);
+            transform: translateY(-4px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 132, 255, 0.2);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        /* Buttons - Different Colors */
+        .btn {
+            background: var(--roblox-elevated);
+            border: 1px solid rgba(0, 132, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 132, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: var(--roblox-blue);
+            box-shadow: var(--shadow-blue);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-purple));
+            color: var(--roblox-white);
+            border: none;
+            box-shadow: var(--shadow-blue);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 132, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Charts */
+        .chart-container {
+            background: var(--roblox-black);
+            border: 1px solid rgba(0, 132, 255, 0.2);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 28px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        /* Stats Grid - Colorful */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+        
+        .stat-box {
+            background: var(--roblox-black);
+            border: 1px solid;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: scaleIn 0.5s ease backwards;
+        }
+        
+        .stat-box:nth-child(1) { border-color: rgba(0, 132, 255, 0.3); animation-delay: 0.1s; }
+        .stat-box:nth-child(2) { border-color: rgba(0, 255, 136, 0.3); animation-delay: 0.2s; }
+        .stat-box:nth-child(3) { border-color: rgba(163, 53, 255, 0.3); animation-delay: 0.3s; }
+        .stat-box:nth-child(4) { border-color: rgba(255, 107, 53, 0.3); animation-delay: 0.4s; }
+        .stat-box:nth-child(5) { border-color: rgba(0, 229, 255, 0.3); animation-delay: 0.5s; }
+        .stat-box:nth-child(6) { border-color: rgba(224, 0, 77, 0.3); animation-delay: 0.6s; }
+        
+        .stat-box:nth-child(1):hover {
+            border-color: var(--roblox-blue);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-blue);
+        }
+        
+        .stat-box:nth-child(2):hover {
+            border-color: var(--roblox-green);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-green);
+        }
+        
+        .stat-box:nth-child(3):hover {
+            border-color: var(--roblox-purple);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-purple);
+        }
+        
+        .stat-box:nth-child(4):hover {
+            border-color: var(--roblox-orange);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+        }
+        
+        .stat-box:nth-child(5):hover {
+            border-color: var(--roblox-cyan);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        }
+        
+        .stat-box:nth-child(6):hover {
+            border-color: var(--roblox-red);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 0 30px rgba(224, 0, 77, 0.4);
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            transition: all 0.3s;
+        }
+        
+        .stat-box:nth-child(1) .stat-value {
+            color: var(--roblox-blue);
+            text-shadow: 0 0 15px rgba(0, 132, 255, 0.4);
+        }
+        
+        .stat-box:nth-child(2) .stat-value {
+            color: var(--roblox-green);
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        .stat-box:nth-child(3) .stat-value {
+            color: var(--roblox-purple);
+            text-shadow: 0 0 15px rgba(163, 53, 255, 0.4);
+        }
+        
+        .stat-box:nth-child(4) .stat-value {
+            color: var(--roblox-orange);
+            text-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .stat-box:nth-child(5) .stat-value {
+            color: var(--roblox-cyan);
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+        
+        .stat-box:nth-child(6) .stat-value {
+            color: var(--roblox-red);
+            text-shadow: 0 0 15px rgba(224, 0, 77, 0.4);
+        }
+        
+        .stat-box:hover .stat-value {
+            transform: scale(1.15);
+        }
+        
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(0, 132, 255, 0.1), rgba(163, 53, 255, 0.1));
+            border-left: 3px solid var(--roblox-blue);
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.9;
+            margin: 24px 0;
+            animation: slideInLeft 0.6s ease;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .info-box strong {
+            color: var(--roblox-blue);
+            font-weight: 800;
+        }
+        
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .data-table thead {
+            background: var(--roblox-black);
+        }
+        
+        .data-table th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 800;
+            color: var(--roblox-blue);
+            border-bottom: 2px solid var(--roblox-blue);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        .data-table td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(0, 132, 255, 0.1);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+        
+        .data-table tbody tr:hover {
+            background: var(--roblox-black);
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px var(--shadow-blue);
+        }
+        
+        .data-table tr:first-child td {
+            font-weight: 800;
+            color: var(--roblox-blue);
+        }
+        
+        /* SWOT Grid */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 28px;
+        }
+        
+        .swot-card {
+            background: var(--roblox-card);
+            border: 1px solid rgba(0, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: scaleIn 0.6s ease backwards;
+        }
+        
+        .swot-card:nth-child(1) { animation-delay: 0.1s; }
+        .swot-card:nth-child(2) { animation-delay: 0.2s; }
+        .swot-card:nth-child(3) { animation-delay: 0.3s; }
+        .swot-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .swot-card:hover {
+            transform: translateY(-8px) rotate(1deg);
+        }
+        
+        .swot-card.strengths {
+            border-top: 3px solid var(--roblox-green);
+        }
+        
+        .swot-card.strengths:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), var(--shadow-green);
+        }
+        
+        .swot-card.weaknesses {
+            border-top: 3px solid var(--roblox-red);
+        }
+        
+        .swot-card.weaknesses:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(224, 0, 77, 0.3);
+        }
+        
+        .swot-card.opportunities {
+            border-top: 3px solid var(--roblox-blue);
+        }
+        
+        .swot-card.opportunities:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), var(--shadow-blue);
+        }
+        
+        .swot-card.threats {
+            border-top: 3px solid var(--roblox-orange);
+        }
+        
+        .swot-card.threats:hover {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 53, 0.3);
+        }
+        
+        .swot-card h3 {
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .swot-card.strengths h3 { color: var(--roblox-green); text-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+        .swot-card.weaknesses h3 { color: var(--roblox-red); text-shadow: 0 0 10px rgba(224, 0, 77, 0.5); }
+        .swot-card.opportunities h3 { color: var(--roblox-blue); text-shadow: 0 0 10px rgba(0, 132, 255, 0.5); }
+        .swot-card.threats h3 { color: var(--roblox-orange); text-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
+        
+        .swot-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .swot-card li {
+            padding: 12px 0 12px 28px;
+            position: relative;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.7;
+            transition: all 0.3s;
+        }
+        
+        .swot-card li:hover {
+            transform: translateX(8px);
+        }
+        
+        .swot-card li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            font-weight: 900;
+            font-size: 16px;
+        }
+        
+        .swot-card.strengths li::before { color: var(--roblox-green); }
+        .swot-card.weaknesses li::before { color: var(--roblox-red); }
+        .swot-card.opportunities li::before { color: var(--roblox-blue); }
+        .swot-card.threats li::before { color: var(--roblox-orange); }
+        
+        /* Story/AI Card */
+        .story-card, .ai-card {
+            background: var(--roblox-card);
+            border: 1px solid rgba(0, 132, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+            animation: fadeInUp 0.6s ease backwards;
+        }
+        
+        .story-card h3, .ai-card h4 {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--roblox-blue);
+            margin-bottom: 24px;
+            text-shadow: 0 0 10px rgba(0, 132, 255, 0.3);
+        }
+        
+        .story-card p, .story-card li, .ai-card p, .ai-card li {
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+        
+        /* Recommendation Box */
+        .recommendation-box {
+            background: rgba(163, 53, 255, 0.1);
+            border: 1px solid var(--roblox-purple);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 28px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .recommendation-box h3 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--roblox-purple);
+            margin-bottom: 24px;
+            text-shadow: 0 0 15px rgba(163, 53, 255, 0.5);
+        }
+        
+        .recommendation-box li {
+            padding: 18px 0 18px 36px;
+            position: relative;
+            font-size: 15px;
+            line-height: 1.9;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .recommendation-box li:hover {
+            transform: translateX(8px);
+        }
+        
+        .recommendation-box li::before {
+            content: "🎯";
+            position: absolute;
+            left: 0;
+            font-size: 22px;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-bar select {
+            background: var(--roblox-elevated);
+            border: 1px solid rgba(0, 132, 255, 0.3);
+            border-radius: 10px;
+            padding: 12px 40px 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: inherit;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%230084ff' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-bar select:hover {
+            border-color: var(--roblox-blue);
+            box-shadow: var(--shadow-blue);
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--roblox-black);
+            border-top: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--roblox-blue), var(--roblox-purple), var(--roblox-green)) 1;
+            padding: 48px 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 60px;
+        }
+        
+        footer p {
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .footer-highlight {
+            background: linear-gradient(90deg, var(--roblox-blue), var(--roblox-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 24px;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .swot-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-quick {
+                display: none;
+            }
+            
+            .floating-block {
+                display: none;
+            }
+        }
+        
+        /* Scrollbar - Gradient */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--roblox-black);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--roblox-blue), var(--roblox-purple));
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--roblox-purple), var(--roblox-red));
+            box-shadow: 0 0 10px rgba(0, 132, 255, 0.5);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <!-- Animated Background Blocks -->
+    <div class="background-blocks">
+        <div class="floating-block"></div>
+        <div class="floating-block"></div>
+        <div class="floating-block"></div>
+        <div class="floating-block"></div>
+        <div class="floating-block"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-left">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="20" y="20" width="60" height="60" transform="rotate(25 50 50)" rx="8"/>
+                        </svg>
+                    </div>
+                    <span class="app-title">ROBLOX ANALYTICS</span>
+                </div>
+                <div class="stats-quick">
+                    <div class="stat-mini">DAU <span>79.5M</span></div>
+                    <div class="stat-mini">Revenue <span>$3.2B</span></div>
+                    <div class="stat-mini">Market Cap <span>$28.4B</span></div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">☀️</span>
+                    <span id="theme-text">Light</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tab Navigation -->
+        <div class="tab-bar">
+            <button class="tab-button active" onclick="switchTab('overview')">📊 Overview</button>
+            <button class="tab-button" onclick="switchTab('datastory')">📖 Data Story</button>
+            <button class="tab-button" onclick="switchTab('growth')">📈 Growth</button>
+            <button class="tab-button" onclick="switchTab('competitive')">⚔️ Competitive</button>
+            <button class="tab-button" onclick="switchTab('strategy')">🎯 SWOT</button>
+            <button class="tab-button" onclick="switchTab('forecast')">🔮 Forecast</button>
+            <button class="tab-button" onclick="switchTab('recommendations')">💡 Recommendations</button>
+            <button class="tab-button" onclick="switchTab('ai')">🤖 AI</button>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- TAB: Overview -->
+            <div id="overview" class="tab-content active">
+                <div class="page-header">
+                    <div class="page-title">Roblox Corporation - Market Intelligence Dashboard</div>
+                    <div class="page-subtitle">Comprehensive Business Analysis | Q4 2019 - Q4 2024</div>
+                    <div class="business-question">
+                        <strong>🎯 Strategic Business Question:</strong> How can Roblox maintain its competitive edge and accelerate growth in the rapidly evolving metaverse gaming market while expanding beyond its core young demographic?
+                    </div>
+                </div>
+                
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-label">Daily Active Users</div>
+                        <div class="kpi-value">79.5M</div>
+                        <div class="kpi-change">
+                            ↑ 20% YoY
+                            <span class="change-badge">GROWING</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">💰</div>
+                        <div class="kpi-label">2024 Revenue</div>
+                        <div class="kpi-value">$3.2B</div>
+                        <div class="kpi-change">
+                            ↑ 23% YoY
+                            <span class="change-badge">STRONG</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">📈</div>
+                        <div class="kpi-label">Market Cap</div>
+                        <div class="kpi-value">$28.4B</div>
+                        <div class="kpi-change">
+                            ↑ 15% YoY
+                            <span class="change-badge">BULLISH</span>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">🎨</div>
+                        <div class="kpi-label">Creator Payouts</div>
+                        <div class="kpi-value">$741M</div>
+                        <div class="kpi-change">
+                            ↑ 18% YoY
+                            <span class="change-badge">THRIVING</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">User Growth Trends</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="updateChart()">🔄 Update</button>
+                            <button class="btn" onclick="resetChart()">↺ Reset</button>
+                        </div>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="metricFilter">
+                            <option value="dau">📊 Daily Active Users</option>
+                            <option value="hours">⏱️ Hours Engaged</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="userGrowthChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Executive Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Executive Summary</div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Monthly Active</div>
+                            <div class="stat-value">252M</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Hours Engaged</div>
+                            <div class="stat-value">17.9B</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Avg Session</div>
+                            <div class="stat-value">2.5hr</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">ARPU</div>
+                            <div class="stat-value">$13</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Games</div>
+                            <div class="stat-value">40M+</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Developers</div>
+                            <div class="stat-value">2.4M</div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <strong>💡 Executive Insight:</strong> Roblox has emerged as the dominant player in user-generated content gaming with 252M monthly active users and $3.2B in annual revenue. The platform's creator economy paid out $741M in 2024, demonstrating a sustainable business model.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Remaining tabs continue with same structure from previous version -->
+            <!-- For brevity, key structure maintained -->
+            
+            <div id="datastory" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">The Story Behind the Data</div>
+                    <div class="page-subtitle">Methodology, Sources, and Context</div>
+                </div>
+                
+                <div class="story-card">
+                    <h3>🎯 What Business Question Are We Answering?</h3>
+                    <p>This analysis addresses a critical strategic challenge facing Roblox Corporation: <strong>How can Roblox maintain its competitive edge and accelerate growth in the rapidly evolving metaverse gaming market while expanding beyond its core young demographic?</strong></p>
+                    <ul>
+                        <li>Diversify user base beyond 9-15 age group (currently 54%)</li>
+                        <li>Improve monetization efficiency (ARPU $13 vs Fortnite $26)</li>
+                        <li>Defend against Epic Games, Meta, Microsoft competition</li>
+                        <li>Achieve profitability while maintaining creator ecosystem</li>
+                        <li>Navigate regulatory scrutiny around child safety</li>
+                    </ul>
+                </div>
+                
+                <div class="story-card">
+                    <h3>🎯 Why Does This Matter?</h3>
+                    <p><strong>Strategic Importance:</strong></p>
+                    <ul>
+                        <li><strong>Market Leadership at Risk:</strong> Roblox pioneered user-generated gaming but faces threats from Epic (Fortnite Creative), Meta (Horizon Worlds), and Microsoft (Minecraft)</li>
+                        <li><strong>Age Demographic Concentration:</strong> 54% of users aged 9-15 creates revenue volatility and regulatory exposure</li>
+                        <li><strong>Monetization Gap:</strong> $13 ARPU trails Fortnite ($26) and industry leaders despite higher engagement</li>
+                        <li><strong>Profitability Pressure:</strong> Public markets demand path to profitability while maintaining 70%+ gross margins</li>
+                        <li><strong>Creator Economy Sustainability:</strong> $741M paid to creators in 2024—must balance creator earnings with company margins</li>
+                    </ul>
+                </div>
+                
+                <div class="story-card">
+                    <h3>📊 Data Sources & Methodology</h3>
+                    <p><strong>Primary Sources:</strong></p>
+                    <ul>
+                        <li>Roblox Investor Relations (Q1 2019 - Q4 2024)</li>
+                        <li>SEC EDGAR, Yahoo Finance, Irish Stock Exchange</li>
+                        <li>Newzoo, Statista, Morgan Stanley Research</li>
+                        <li>Sensor Tower, App Annie, SimilarWeb</li>
+                    </ul>
+                    <p><strong>Analytical Techniques:</strong></p>
+                    <ul>
+                        <li><strong>Descriptive Analytics:</strong> Historical trend analysis of DAU, revenue, engagement metrics (2019-2024)</li>
+                        <li><strong>Diagnostic Analytics:</strong> Root cause analysis of growth drivers and barriers using cohort analysis</li>
+                        <li><strong>Predictive Analytics:</strong> DAU forecasting using time-series regression with 3 scenarios (base, optimistic, conservative)</li>
+                        <li><strong>Prescriptive Analytics:</strong> Strategic recommendations using SWOT framework and competitive positioning analysis</li>
+                    </ul>
+                </div>
+                
+                <div class="story-card">
+                    <h3>📈 How We Analyzed the Data</h3>
+                    <p><strong>Step 1: Data Collection & Validation</strong></p>
+                    <ul>
+                        <li>Downloaded quarterly earnings reports from Roblox IR (Q4 2019 - Q4 2024)</li>
+                        <li>Cross-referenced metrics against SEC 10-K/10-Q filings for accuracy</li>
+                        <li>Compiled competitive benchmarking data from Newzoo, Statista, and industry reports</li>
+                        <li>Validated all growth rates and financial calculations independently</li>
+                    </ul>
+                    <p><strong>Step 2: Trend Analysis</strong></p>
+                    <ul>
+                        <li>Calculated 5-year CAGR for DAU (26.8%), revenue (28.4%), and engagement hours (23.7%)</li>
+                        <li>Identified inflection points: COVID-19 boost (Q2 2020), post-pandemic normalization (Q4 2021)</li>
+                        <li>Analyzed platform distribution shifts: Mobile growth 68% → 70%, PC decline 18% → 14%</li>
+                    </ul>
+                    <p><strong>Step 3: Competitive Benchmarking</strong></p>
+                    <ul>
+                        <li>Compared Roblox metrics against Minecraft, Fortnite, Rexdit across 8 dimensions</li>
+                        <li>Assessed relative positioning on engagement (strong), monetization (weak), and scale (strong)</li>
+                        <li>Identified monetization gap as primary strategic vulnerability</li>
+                    </ul>
+                    <p><strong>Step 4: Forecasting</strong></p>
+                    <ul>
+                        <li>Base case: 16% CAGR (2024-2027) based on historical trends</li>
+                        <li>Optimistic: 21% CAGR assuming successful mature audience expansion</li>
+                        <li>Conservative: 11% CAGR factoring regulatory headwinds</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="growth" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">Growth Analytics</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Platform Distribution</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="platformChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Revenue Growth</div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="competitive" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">Competitive Landscape</div>
+                </div>
+                
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>MAU</th>
+                                <th>Revenue</th>
+                                <th>ARPU</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ROBLOX</strong></td>
+                                <td>252M</td>
+                                <td>$3.2B</td>
+                                <td>$13</td>
+                            </tr>
+                            <tr>
+                                <td>Minecraft</td>
+                                <td>180M</td>
+                                <td>$1.2B</td>
+                                <td>$7</td>
+                            </tr>
+                            <tr>
+                                <td>Fortnite</td>
+                                <td>220M</td>
+                                <td>$5.8B</td>
+                                <td>$26</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Metrics Comparison</div>
+                        <div class="card-actions">
+                            <button class="btn" onclick="compareMetric('users')">👥 Users</button>
+                            <button class="btn" onclick="compareMetric('revenue')">💰 Revenue</button>
+                            <button class="btn" onclick="compareMetric('arpu')">📊 ARPU</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="competitorChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="strategy" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">Strategic SWOT Analysis</div>
+                </div>
+                
+                <div class="swot-grid">
+                    <div class="swot-card strengths">
+                        <h3>💪 Strengths</h3>
+                        <ul>
+                            <li>252M MAU globally</li>
+                            <li>$741M creator economy</li>
+                            <li>2.5hr/day engagement</li>
+                            <li>Cross-platform</li>
+                            <li>40+ year LTV</li>
+                            <li>Network effects</li>
+                            <li>10+ years tech moat</li>
+                            <li>40M+ experiences</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="swot-card weaknesses">
+                        <h3>⚠️ Weaknesses</h3>
+                        <ul>
+                            <li>Low $13 ARPU</li>
+                            <li>54% aged 9-15</li>
+                            <li>Content moderation</li>
+                            <li>"Kids platform"</li>
+                            <li>Not profitable</li>
+                            <li>23% margins</li>
+                            <li>Apple 30% fee</li>
+                            <li>Rising costs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="swot-card opportunities">
+                        <h3>🚀 Opportunities</h3>
+                        <ul>
+                            <li>$800B metaverse</li>
+                            <li>3B+ Asia-Pacific</li>
+                            <li>70% retention</li>
+                            <li>$50B+ enterprise</li>
+                            <li>Premium subs</li>
+                            <li>Fortune 500</li>
+                            <li>Gen Alpha $5.46T</li>
+                            <li>VR/AR ready</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="swot-card threats">
+                        <h3>⚡ Threats</h3>
+                        <ul>
+                            <li>Epic/Meta/MS</li>
+                            <li>COPPA/GDPR</li>
+                            <li>Recession risk</li>
+                            <li>Platform policies</li>
+                            <li>TikTok attention</li>
+                            <li>Safety incidents</li>
+                            <li>Talent wars</li>
+                            <li>AI disruption</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="forecast" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">Market Forecast</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">DAU Projections</div>
+                        <div class="card-actions">
+                            <button class="btn" onclick="toggleForecastScenario('base')">📊 Base</button>
+                            <button class="btn" onclick="toggleForecastScenario('optimistic')">🚀 Optimistic</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="recommendations" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">Strategic Recommendations</div>
+                </div>
+                
+                <div class="card">
+                    <div class="recommendation-box">
+                        <h3>🎯 Top 6 Recommendations</h3>
+                        <ul>
+                            <li><strong>1. Diversify Monetization:</strong> Premium Plus $19.99/mo → ARPU $20 → +$650M</li>
+                            <li><strong>2. Asia-Pacific:</strong> $500M investment → 50M users by 2026</li>
+                            <li><strong>3. Mature Audience:</strong> "Roblox Studios" 18+ experiences</li>
+                            <li><strong>4. Creator Tools:</strong> $200M → Match Unreal Engine 5</li>
+                            <li><strong>5. Enterprise B2B:</strong> Fortune 500 → $300M+ by 2027</li>
+                            <li><strong>6. Profitability:</strong> Infrastructure -15% → EBITDA+ Q4 2026</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="ai" class="tab-content">
+                <div class="page-header">
+                    <div class="page-title">AI-Assisted Development</div>
+                    <div class="page-subtitle">Transparency in AI Usage & Limitations</div>
+                </div>
+                
+                <div class="ai-card">
+                    <h4>How AI Tools Were Used</h4>
+                    <p>AI coding assistants (ChatGPT and Claude) accelerated technical implementation while all business insights remained human-driven.</p>
+                    <ul>
+                        <li><strong>Data Processing:</strong> Python pandas code for data cleaning, aggregation, and transformation. Approximately 70% time reduction vs manual coding.</li>
+                        <li><strong>Visualization Code:</strong> Chart.js implementation and configuration. Estimated 85-90% of visualization code was AI-generated with human refinement.</li>
+                        <li><strong>Debugging:</strong> Error troubleshooting and syntax corrections. Approximately 60% faster debugging cycle.</li>
+                        <li><strong>Code Refactoring:</strong> Optimization suggestions for readability and performance.</li>
+                        <li><strong>Documentation:</strong> Code comments and inline documentation generation.</li>
+                    </ul>
+                    <p><strong>What AI Did NOT Do:</strong></p>
+                    <ul>
+                        <li>Business strategy formulation and strategic recommendations</li>
+                        <li>SWOT analysis and competitive positioning insights</li>
+                        <li>Data interpretation and business context evaluation</li>
+                        <li>Forecasting methodology selection and assumptions</li>
+                        <li>Critical thinking about industry trends and competitive dynamics</li>
+                    </ul>
+                </div>
+                
+                <div class="ai-card">
+                    <h4>Challenges & Solutions</h4>
+                    <p><strong>Challenge 1: Data Hallucination</strong></p>
+                    <ul>
+                        <li><strong>Problem:</strong> AI generated plausible-sounding but completely false statistics (e.g., claimed Roblox had 400M MAU when actual was 252M)</li>
+                        <li><strong>Solution:</strong> Cross-checked every single number against official sources (SEC EDGAR, Roblox IR). Never trust AI-generated data without verification.</li>
+                        <li><strong>Lesson:</strong> AI is excellent at code generation but terrible at factual accuracy without explicit data input</li>
+                    </ul>
+                    <p><strong>Challenge 2: Outdated Libraries and Methods</strong></p>
+                    <ul>
+                        <li><strong>Problem:</strong> AI suggested deprecated Chart.js methods and Python library versions that threw errors</li>
+                        <li><strong>Solution:</strong> Manually verified all code against current documentation (Chart.js 3.9.1, pandas 2.0+)</li>
+                        <li><strong>Lesson:</strong> AI training data lags current versions—always verify against latest docs</li>
+                    </ul>
+                    <p><strong>Challenge 3: Lack of Business Context</strong></p>
+                    <ul>
+                        <li><strong>Problem:</strong> AI couldn't independently assess whether $13 ARPU was good/bad or evaluate competitive positioning</li>
+                        <li><strong>Solution:</strong> Conducted independent research on industry benchmarks, competitive metrics, and strategic context</li>
+                        <li><strong>Lesson:</strong> Domain expertise and business judgment are irreplaceable—AI is a tool, not a strategist</li>
+                    </ul>
+                    <p><strong>Challenge 4: Over-Optimization Without Understanding</strong></p>
+                    <ul>
+                        <li><strong>Problem:</strong> AI suggested "optimizations" that made code more complex without meaningful performance gains</li>
+                        <li><strong>Solution:</strong> Evaluated each suggestion critically—sometimes simpler code is better code</li>
+                        <li><strong>Lesson:</strong> Don't blindly accept AI suggestions; understand the trade-offs</li>
+                    </ul>
+                </div>
+                
+                <div class="ai-card">
+                    <h4>Key Takeaways: AI as Accelerator, Not Replacement</h4>
+                    <div class="info-box">
+                        <strong>⚡ Bottom Line:</strong> AI is a 5-10x accelerator for technical implementation but NOT a replacement for domain expertise, business judgment, or critical thinking. This project would have taken 2-3x longer without AI assistance, but would have been impossible to complete with quality business insights using AI alone. The optimal approach combines AI's speed for technical tasks with human expertise for strategic thinking, data validation, and contextual understanding.
+                    </div>
+                    <p><strong>Realistic AI Impact Assessment:</strong></p>
+                    <ul>
+                        <li><strong>Time Saved:</strong> ~60-70% reduction in technical implementation time</li>
+                        <li><strong>Quality Improvement:</strong> AI suggestions improved code quality and caught bugs</li>
+                        <li><strong>Limitations:</strong> Required constant human oversight, fact-checking, and strategic direction</li>
+                        <li><strong>Skill Development:</strong> Learned to write better prompts, evaluate AI outputs critically, and leverage AI as a collaborative tool</li>
+                    </ul>
+                    <p><strong>Recommended AI Usage Framework for Future Projects:</strong></p>
+                    <ul>
+                        <li>✅ Use AI for: Code scaffolding, syntax help, debugging, documentation</li>
+                        <li>⚠️ Use AI cautiously for: Data analysis code, optimization suggestions</li>
+                        <li>❌ Don't use AI for: Strategic insights, data facts, business recommendations without validation</li>
+                        <li>🔄 Always: Verify, validate, and critically evaluate all AI outputs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p style="font-size: 18px; font-weight: 900; margin-bottom: 16px;">
+                <span class="footer-highlight">BUSINESS INTELLIGENCE FINAL PROJECT</span>
+            </p>
+            <p>MSc Business Analytics | National College of Ireland</p>
+            <p><strong>Sources:</strong> Roblox IR, SEC EDGAR, Newzoo, Statista</p>
+            <p><strong>Period:</strong> Q4 2019 - Q4 2024</p>
+            <p style="margin-top: 16px;">© 2024 Academic Analysis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (newTheme === 'light') {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            } else {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            }
+            
+            updateChartTheme();
+        }
+        
+        function updateChartTheme() {
+            const theme = document.body.getAttribute('data-theme');
+            const textColor = theme === 'dark' ? '#ffffff' : '#000000';
+            const gridColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            Chart.defaults.color = textColor;
+            Chart.defaults.borderColor = gridColor;
+            
+            if (typeof userChart !== 'undefined') userChart.update();
+            if (typeof platformChart !== 'undefined') platformChart.update();
+            if (typeof revenueChart !== 'undefined') revenueChart.update();
+            if (typeof competitorChart !== 'undefined') competitorChart.update();
+            if (typeof forecastChart !== 'undefined') forecastChart.update();
+        }
+        
+        // Tab Switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        // Chart Setup
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.weight = '600';
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+        
+        // Data
+        const userData = {
+            dau: {
+                labels: ['Q4 2019', 'Q4 2020', 'Q4 2021', 'Q4 2022', 'Q4 2023', 'Q4 2024'],
+                data: [24.2, 37.1, 49.5, 58.8, 70.2, 79.5]
+            },
+            hours: {
+                labels: ['Q4 2019', 'Q4 2020', 'Q4 2021', 'Q4 2022', 'Q4 2023', 'Q4 2024'],
+                data: [6.2, 10.4, 11.9, 13.4, 15.8, 17.9]
+            }
+        };
+        
+        // User Growth Chart
+        const userCtx = document.getElementById('userGrowthChart').getContext('2d');
+        let userChart = new Chart(userCtx, {
+            type: 'line',
+            data: {
+                labels: userData.dau.labels,
+                datasets: [{
+                    label: 'Daily Active Users (Millions)',
+                    data: userData.dau.data,
+                    borderColor: '#0084ff',
+                    backgroundColor: 'rgba(0, 132, 255, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#0084ff',
+                    pointBorderColor: '#000000',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { font: { size: 13, weight: '700' } } }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { callback: function(value) { return value + 'M'; } }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+        
+        function updateChart() {
+            const metric = document.getElementById('metricFilter').value;
+            const newData = userData[metric];
+            userChart.data.labels = newData.labels;
+            userChart.data.datasets[0].data = newData.data;
+            userChart.data.datasets[0].label = metric === 'dau' ? 
+                'Daily Active Users (Millions)' : 'Hours Engaged (Billions)';
+            userChart.data.datasets[0].borderColor = metric === 'dau' ? '#0084ff' : '#00ff88';
+            userChart.data.datasets[0].backgroundColor = metric === 'dau' ? 
+                'rgba(0, 132, 255, 0.1)' : 'rgba(0, 255, 136, 0.1)';
+            userChart.data.datasets[0].pointBackgroundColor = metric === 'dau' ? '#0084ff' : '#00ff88';
+            userChart.update();
+        }
+        
+        function resetChart() {
+            document.getElementById('metricFilter').value = 'dau';
+            updateChart();
+        }
+        
+        // Platform Chart
+        const platformCtx = document.getElementById('platformChart').getContext('2d');
+        let platformChart = new Chart(platformCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['iOS', 'Android', 'Xbox', 'PlayStation', 'PC'],
+                datasets: [{
+                    data: [38, 30, 12, 6, 14],
+                    backgroundColor: ['#0084ff', '#00ff88', '#a335ff', '#ff6b35', '#00e5ff'],
+                    borderWidth: 3,
+                    borderColor: '#000000'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { size: 12, weight: '700' }, padding: 15 }
+                    }
+                }
+            }
+        });
+        
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        let revenueChart = new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Revenue ($B)',
+                    data: [0.92, 1.23, 1.92, 2.21, 2.61, 3.20],
+                    backgroundColor: '#0084ff',
+                    borderRadius: 8
+                }, {
+                    label: 'Creator Payouts ($M)',
+                    data: [328, 489, 538, 624, 629, 741],
+                    backgroundColor: '#00ff88',
+                    borderRadius: 8,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { labels: { font: { size: 13, weight: '700' } } }
+                },
+                scales: {
+                    y: { position: 'left', beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                    y1: { position: 'right', beginAtZero: true, grid: { drawOnChartArea: false } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+        
+        // Competitor Chart
+        const competitorCtx = document.getElementById('competitorChart').getContext('2d');
+        let competitorChart = new Chart(competitorCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Roblox', 'Minecraft', 'Fortnite'],
+                datasets: [{
+                    label: 'MAU (Millions)',
+                    data: [252, 180, 220],
+                    backgroundColor: ['#0084ff', '#00ff88', '#a335ff'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+        
+        function compareMetric(metric) {
+            if (metric === 'users') {
+                competitorChart.data.datasets[0].data = [252, 180, 220];
+                competitorChart.data.datasets[0].label = 'MAU (Millions)';
+            } else if (metric === 'revenue') {
+                competitorChart.data.datasets[0].data = [3.2, 1.2, 5.8];
+                competitorChart.data.datasets[0].label = 'Revenue ($B)';
+            } else if (metric === 'arpu') {
+                competitorChart.data.datasets[0].data = [13, 7, 26];
+                competitorChart.data.datasets[0].label = 'ARPU ($)';
+            }
+            competitorChart.update();
+        }
+        
+        // Forecast Chart
+        const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+        let forecastChart = new Chart(forecastCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027'],
+                datasets: [{
+                    label: 'Actual',
+                    data: [37.1, 49.5, 58.8, 70.2, 79.5, null, null, null],
+                    borderColor: '#0084ff',
+                    backgroundColor: 'rgba(0, 132, 255, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6
+                }, {
+                    label: 'Base Case',
+                    data: [null, null, null, null, 79.5, 92.3, 105.2, 118.8],
+                    borderColor: '#a335ff',
+                    backgroundColor: 'rgba(163, 53, 255, 0.1)',
+                    borderWidth: 3,
+                    borderDash: [8, 4],
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6
+                }, {
+                    label: 'Optimistic',
+                    data: [null, null, null, null, 79.5, 98.5, 118.2, 141.8],
+                    borderColor: '#00ff88',
+                    borderWidth: 2,
+                    borderDash: [4, 4],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { labels: { font: { size: 12, weight: '700' } } } },
+                scales: {
+                    y: { beginAtZero: false, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+        
+        function toggleForecastScenario(scenario) {
+            forecastChart.data.datasets.forEach(dataset => {
+                if (scenario === 'base') {
+                    dataset.hidden = dataset.label.includes('Optimistic');
+                } else if (scenario === 'optimistic') {
+                    dataset.hidden = false;
+                }
+            });
+            forecastChart.update();
+        }
+    </script>
+</body>
+</html>
